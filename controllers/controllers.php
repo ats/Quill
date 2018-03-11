@@ -549,7 +549,7 @@ $app->get('/view', function() use($app) {
   }
 });
 
-function create_favorite(&$user, $url) {
+function create_favorite(&$user, $url, $note_content) {
 
   $tweet_id = false;
   $twitter_syndication = false;
@@ -568,7 +568,8 @@ function create_favorite(&$user, $url) {
   }
 
   $micropub_request = array(
-    'like-of' => $url
+	  'like-of' => $url,
+	  'content' => $note_content 
   );
   if($twitter_syndication) {
     $micropub_request['syndication'] = $twitter_syndication;
@@ -648,7 +649,7 @@ $app->post('/favorite', function() use($app) {
         $error = 'Your Micropub endpoint did not return a location header or a recognized response code';
       }
     } else {
-      $r = create_favorite($user, $params['like_of']);
+      $r = create_favorite($user, $params['like_of'], $params['content']);
       $location = $r['location'];
     }
 
